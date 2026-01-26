@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="description" content="Terms and Conditions for Price Lister App">
+  <title>Terms & Conditions - Price Lister</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+
+  <style>
+    :root {
+      /* Dark Theme (Default) - Flat & Clean */
+      --bg: #0a0a0a;
+      --surface: #141414;
+      --border: #2a2a2a;
+      --text-main: #f0f0f0;
+      --text-muted: #a0a0a0;
+      --primary: #e10600;
+    }
+
+    body.light {
+      /* Light Theme - Flat & Clean */
+      --bg: #ffffff;
+      --surface: #f8f9fa;
+      --border: #e0e0e0;
+      --text-main: #1a1a1a;
+      --text-muted: #555555;
+      --primary: #d00500;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: var(--bg);
+      color: var(--text-main);
+      font-family: 'Inter', sans-serif;
+      line-height: 1.7;
+      transition: background 0.3s ease, color 0.3s ease;
+    }
+
+    h1, h2, h3, .brand-name { font-family: 'Poppins', sans-serif; }
+    
+    a { text-decoration: none; color: inherit; transition: 0.2s; }
+    a:hover { color: var(--primary); }
+
+    /* ================= HEADER ================= */
+    header {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      height: 64px;
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 20px;
+      z-index: 1000;
+    }
+
+    .left-group {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .menu-btn {
+      font-size: 20px;
+      cursor: pointer;
+      color: var(--text-main);
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      color: var(--text-main);
+      text-decoration: none;
+    }
+
+    .brand img {
+      height: 32px;
+      width: auto;
+    }
+
+    .brand-name {
+      font-weight: 700;
+      font-size: 18px;
+    }
+
+    .theme-btn {
+      width: 36px;
+      height: 36px;
+      border-radius: 4px; 
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      font-size: 16px;
+      background: transparent;
+      color: var(--text-main);
+    }
+    .theme-btn:hover { background: var(--border); }
+
+    /* ================= DRAWER ================= */
+    .drawer-overlay {
+      position: fixed; inset: 0;
+      background: rgba(0,0,0,0.5);
+      opacity: 0; pointer-events: none;
+      transition: 0.3s; z-index: 1001;
+    }
+    .drawer-overlay.show { opacity: 1; pointer-events: auto; }
+
+    .drawer {
+      position: fixed; top: 0; left: -260px;
+      width: 260px; height: 100%;
+      background: var(--surface);
+      border-right: 1px solid var(--border);
+      padding-top: 64px;
+      transition: transform 0.3s ease;
+      z-index: 1002;
+    }
+    .drawer.open { transform: translateX(260px); }
+
+    .drawer a {
+      display: flex; align-items: center; gap: 12px;
+      padding: 14px 24px;
+      border-bottom: 1px solid var(--border);
+      font-weight: 500;
+    }
+    .drawer a:hover {
+      background: var(--border);
+      color: var(--primary);
+    }
+
+    /* ================= CONTENT ================= */
+    main {
+      padding-top: 100px;
+      padding-bottom: 60px;
+      max-width: 800px; /* Reading width */
+      margin: 0 auto;
+      padding-left: 20px;
+      padding-right: 20px;
+    }
+
+    .terms-header {
+      margin-bottom: 40px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    h1 { font-size: 32px; margin-bottom: 10px; color: var(--primary); }
+    .last-updated { color: var(--text-muted); font-size: 14px; }
+
+    h2 {
+      font-size: 20px;
+      margin-top: 32px;
+      margin-bottom: 12px;
+      color: var(--text-main);
+    }
+
+    p { margin-bottom: 16px; color: var(--text-muted); }
+    
+    ul { margin-bottom: 16px; padding-left: 24px; color: var(--text-muted); }
+    li { margin-bottom: 8px; }
+
+    strong { color: var(--text-main); }
+
+    /* ================= FOOTER ================= */
+    footer {
+      border-top: 1px solid var(--border);
+      background: var(--surface);
+      padding: 30px 20px;
+      text-align: center;
+      font-size: 13px;
+      color: var(--text-muted);
+    }
+    
+    .footer-links { margin-bottom: 10px; }
+    .footer-links a { margin: 0 10px; font-weight: 500; }
+
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="left-group">
+    <i class="fas fa-bars menu-btn" onclick="toggleDrawer()"></i>
+    <a href="index.html" class="brand">
+      <img src="src/RoundLogo.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3502/3502601.png'">
+      <span class="brand-name">Price Lister</span>
+    </a>
+  </div>
+
+  <div class="theme-btn" onclick="toggleTheme()">
+    <i class="fas fa-moon" id="themeIcon"></i>
+  </div>
+</header>
+
+<div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
+<nav class="drawer" id="drawer">
+  <a href="index.html"><i class="fas fa-home"></i> Home</a>
+  <a href="guide.html"><i class="fas fa-book"></i> User Guide</a>
+  <a href="contact.html"><i class="fas fa-envelope"></i> Contact Support</a>
+</nav>
+
+<main>
+  <div class="terms-header">
+    <h1>Terms & Conditions</h1>
+    <span class="last-updated">Last Updated: January 2026</span>
+  </div>
+
+  <p>
+    Welcome to <strong>Price Lister</strong>. By downloading, installing, or using our mobile application, you agree to be bound by these Terms and Conditions. If you do not agree to these terms, please do not use the application.
+  </p>
+
+  <h2>1. License to Use</h2>
+  <p>
+    We grant you a revocable, non-exclusive, non-transferable, limited license to download, install, and use the Application strictly in accordance with these Terms. This license is for your personal or internal business use.
+  </p>
+
+  <h2>2. User Responsibility & Data</h2>
+  <p>
+    Price Lister is an <strong>offline-first application</strong>. All data (including product lists, images, prices, and invoices) is stored locally on your device.
+  </p>
+  <ul>
+    <li>You are solely responsible for backing up your data using the app's "Backup & Restore" feature.</li>
+    <li>We (the developers) cannot retrieve your data if you lose your phone, uninstall the app, or clear your storage without a backup.</li>
+    <li>We are not liable for any loss of business data, revenue, or profits resulting from device failure.</li>
+  </ul>
+
+  <h2>3. Prohibited Uses</h2>
+  <p>
+    You agree not to:
+  </p>
+  <ul>
+    <li>Reverse engineer, decompile, or attempt to derive the source code of the app.</li>
+    <li>Use the app for any illegal purposes or to facilitate the sale of illegal goods.</li>
+    <li>Rent, lease, or sublicense the app to third parties.</li>
+  </ul>
+
+  <h2>4. Disclaimer of Warranties</h2>
+  <p>
+    The Application is provided to you "AS IS" and "AS AVAILABLE" and with all faults and defects without warranty of any kind. To the maximum extent permitted under applicable law, we expressly disclaim all warranties, whether express, implied, or statutory.
+  </p>
+
+  <h2>5. Limitation of Liability</h2>
+  <p>
+    In no event shall the Price Lister team be liable for any special, incidental, indirect, or consequential damages whatsoever (including, but not limited to, damages for loss of profits, loss of data, or other information) arising out of the use of or inability to use the Application.
+  </p>
+
+  <h2>6. Changes to Terms</h2>
+  <p>
+    We reserve the right to modify these Terms at any time. We will notify you of any changes by updating the "Last Updated" date at the top of this page. Your continued use of the Application after such changes constitutes your acceptance of the new Terms.
+  </p>
+
+  <h2>7. Contact Us</h2>
+  <p>
+    If you have any questions about these Terms, please contact us at:
+  </p>
+  <p>
+    <strong>Email:</strong> support@pricelister.app
+  </p>
+
+</main>
+
+<footer>
+  <div class="footer-links">
+    <a href="privacy.html">Privacy Policy</a>
+  </div>
+  <div class="copyright">
+    © 2026 Price Lister. All rights reserved.
+  </div>
+</footer>
+
+<script>
+  // Drawer Logic
+  const drawer = document.getElementById('drawer');
+  const overlay = document.getElementById('overlay');
+
+  function toggleDrawer() {
+    drawer.classList.toggle('open');
+    overlay.classList.toggle('show');
+  }
+
+  // Theme Logic
+  const themeIcon = document.getElementById('themeIcon');
+  const body = document.body;
+
+  // Check storage on load
+  if(localStorage.getItem('theme') === 'light') {
+    body.classList.add('light');
+    themeIcon.className = 'fas fa-sun';
+  } else {
+    themeIcon.className = 'fas fa-moon';
+  }
+
+  function toggleTheme() {
+    body.classList.toggle('light');
+    const isLight = body.classList.contains('light');
+    themeIcon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+    localStorage.setItem('theme', isLight ? 'light' : 'dark');
+  }
+</script>
+
+</body>
+</html>
