@@ -1,436 +1,239 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <meta name="description" content="User Guide for Price Lister App">
   <title>User Guide - Price Lister</title>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=Poppins:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
 
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css"/>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
 
-  <style>
-    :root {
-      /* Dark Theme (Luminium) */
-      --bg: #080808;
-      --text-main: #ffffff;
-      --text-muted: #b0b0b0;
-      
-      --card-bg: rgba(20, 20, 20, 0.6); /* Glassy */
-      --card-border: rgba(255, 255, 255, 0.08);
-      --card-hover: rgba(255, 255, 255, 0.05);
-
-      --primary: #e10600;
-      --accent-glow: radial-gradient(circle at 50% 50%, rgba(225, 6, 0, 0.15), transparent 70%);
-
-      --nav-bg: rgba(8, 8, 8, 0.85);
-    }
-
-    body.light {
-      /* Light Theme (Clean Luminium) */
-      --bg: #f4f6f8;
-      --text-main: #1a1a1a;
-      --text-muted: #555555;
-      
-      --card-bg: rgba(255, 255, 255, 0.7);
-      --card-border: rgba(0, 0, 0, 0.05);
-      --card-hover: #ffffff;
-
-      --accent-glow: radial-gradient(circle at 50% 50%, rgba(225, 6, 0, 0.05), transparent 70%);
-      --nav-bg: rgba(255, 255, 255, 0.85);
-    }
-
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html { scroll-behavior: smooth; }
-
-    body {
-      background: var(--bg);
-      color: var(--text-main);
-      font-family: 'Inter', sans-serif;
-      line-height: 1.8;
-      transition: all 0.3s ease;
-      overflow-x: hidden;
-    }
-
-    h1, h2, h3, .brand-name { font-family: 'Poppins', sans-serif; }
-
-    /* Luminium Ambient Background */
-    body::before {
-      content: '';
-      position: fixed;
-      top: -20%; left: -20%;
-      width: 800px; height: 800px;
-      background: var(--primary);
-      filter: blur(200px);
-      opacity: 0.08;
-      z-index: -1;
-      pointer-events: none;
-    }
-
-    /* ================= HEADER ================= */
-    header {
-      position: fixed;
-      top: 0; left: 0; right: 0;
-      height: 72px;
-      background: var(--nav-bg);
-      backdrop-filter: blur(15px);
-      -webkit-backdrop-filter: blur(15px);
-      border-bottom: 1px solid var(--card-border);
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding: 0 24px;
-      z-index: 1000;
-    }
-
-    .brand {
-      display: flex; align-items: center; gap: 10px;
-      text-decoration: none; color: var(--text-main);
-    }
-    .brand img { height: 36px; width: auto; }
-    .brand-name { font-weight: 700; font-size: 18px; }
-
-    .menu-btn, .theme-btn {
-      font-size: 20px; cursor: pointer; color: var(--text-main);
-      transition: color 0.2s;
-    }
-    .menu-btn:hover, .theme-btn:hover { color: var(--primary); }
-
-    /* ================= DRAWER ================= */
-    .drawer-overlay {
-      position: fixed; inset: 0; background: rgba(0,0,0,0.6);
-      opacity: 0; pointer-events: none; transition: 0.3s; z-index: 1001;
-      backdrop-filter: blur(4px);
-    }
-    .drawer-overlay.show { opacity: 1; pointer-events: auto; }
-
-    .drawer {
-      position: fixed; top: 0; left: -280px; width: 280px; height: 100%;
-      background: var(--bg); border-right: 1px solid var(--card-border);
-      padding-top: 80px; transition: 0.3s ease; z-index: 1002;
-    }
-    .drawer.open { left: 0; }
-    .drawer a {
-      display: flex; align-items: center; gap: 12px; padding: 16px 24px;
-      color: var(--text-main); text-decoration: none; font-weight: 500;
-      border-left: 3px solid transparent;
-    }
-    .drawer a:hover { border-left-color: var(--primary); background: rgba(255,255,255,0.03); }
-
-    /* ================= HERO & INTRO ================= */
-    main { padding-top: 100px; max-width: 900px; margin: auto; padding-left: 20px; padding-right: 20px; padding-bottom: 80px; }
-
-    .hero-section {
-      text-align: center;
-      margin-bottom: 60px;
-      position: relative;
-    }
-
-    .big-logo {
-      width: 100px;
-      height: 100px;
-      object-fit: contain;
-      margin-bottom: 20px;
-      filter: drop-shadow(0 0 30px rgba(225,6,0,0.3));
-      animation: float 6s ease-in-out infinite;
-    }
-
-    @keyframes float { 0%,100% { transform: translateY(0); } 50% { transform: translateY(-10px); } }
-
-    .hero-section h1 {
-      font-size: 42px;
-      margin-bottom: 16px;
-      background: linear-gradient(135deg, #fff 0%, #aaa 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-    
-    body.light .hero-section h1 {
-      background: linear-gradient(135deg, #000 0%, #555 100%);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
-
-    .hero-section p {
-      font-size: 18px;
-      color: var(--text-muted);
-      max-width: 600px;
-      margin: auto;
-    }
-
-    /* ================= FEATURE NAV GRID ================= */
-    .nav-label { font-size: 14px; text-transform: uppercase; color: var(--primary); letter-spacing: 1px; margin-bottom: 15px; font-weight: 600; }
-
-    .feature-nav {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
-      gap: 16px;
-      margin-bottom: 80px;
-    }
-
-    .nav-card {
-      background: var(--card-bg);
-      border: 1px solid var(--card-border);
-      padding: 20px;
-      border-radius: 16px;
-      text-decoration: none;
-      color: var(--text-main);
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      text-align: center;
-      transition: 0.3s;
-      backdrop-filter: blur(10px);
-    }
-
-    .nav-card:hover {
-      background: var(--card-hover);
-      border-color: var(--primary);
-      transform: translateY(-5px);
-      box-shadow: 0 10px 30px rgba(0,0,0,0.2);
-    }
-
-    .nav-card i { font-size: 24px; color: var(--primary); margin-bottom: 10px; }
-    .nav-card span { font-weight: 600; font-size: 14px; }
-
-    /* ================= GUIDE CONTENT ================= */
-    .guide-topic {
-      margin-bottom: 60px;
-      padding-top: 20px;
-      border-top: 1px solid var(--card-border);
-    }
-
-    .guide-topic h2 {
-      font-size: 28px;
-      margin-bottom: 20px;
-      color: var(--primary);
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
-
-    .guide-topic h3 { font-size: 18px; margin: 24px 0 10px; color: var(--text-main); }
-
-    .guide-topic p { color: var(--text-muted); margin-bottom: 16px; }
-
-    .guide-topic ul { margin-left: 20px; margin-bottom: 20px; color: var(--text-muted); }
-    .guide-topic li { margin-bottom: 8px; }
-
-    .alert-box {
-      background: rgba(225, 6, 0, 0.1);
-      border-left: 4px solid var(--primary);
-      padding: 16px;
-      border-radius: 0 8px 8px 0;
-      margin: 20px 0;
-      color: var(--text-muted);
-      font-size: 14px;
-    }
-    
-    .alert-box strong { color: var(--primary); }
-
-    /* ================= FOOTER ================= */
-    footer {
-      text-align: center;
-      padding: 40px 20px;
-      border-top: 1px solid var(--card-border);
-      color: var(--text-muted);
-      font-size: 13px;
-      background: var(--bg);
-    }
-
-  </style>
+  <link rel="stylesheet" href="Style.css" />
 </head>
+
 <body>
 
-<header>
-  <div class="left-group" style="display:flex; align-items:center; gap:16px;">
-    <i class="fas fa-bars menu-btn" onclick="toggleDrawer()"></i>
-    <a href="index.html" class="brand">
-      <img src="src/Roundlogo.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3502/3502601.png'">
-      <span class="brand-name">Price Lister</span>
-    </a>
-  </div>
-  <i class="fas fa-moon theme-btn" id="themeIcon" onclick="toggleTheme()"></i>
-</header>
+  <header>
+    <div class="left-group" style="display:flex; align-items:center; gap:16px;">
+      <i class="fas fa-bars menu-btn" onclick="toggleDrawer()"></i>
+      <a href="index.html" class="brand">
+        <img src="src/Roundlogo.png" alt="Logo"
+          onerror="this.src='https://cdn-icons-png.flaticon.com/512/3502/3502601.png'">
+        <span class="brand-name">Price Lister</span>
+      </a>
+    </div>
+    <i class="fas fa-moon theme-btn" id="themeIcon" onclick="toggleTheme()"></i>
+  </header>
 
-<div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
-<nav class="drawer" id="drawer">
-  <a href="index.html"><i class="fas fa-home"></i> Home</a>
-  <a href="guide.html" style="color:var(--primary); background:rgba(255,255,255,0.05);"><i class="fas fa-book"></i> User Guide</a>
-  <a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacy</a>
-</nav>
+  <div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
+  <nav class="drawer" id="drawer">
+    <a href="index.html"><i class="fas fa-home"></i> Home</a>
+    <a href="guide.html" style="color:var(--primary); background:rgba(255,255,255,0.05);"><i class="fas fa-book"></i>
+      User Guide</a>
+    <a href="privacy.html"><i class="fas fa-shield-alt"></i> Privacy</a>
+  </nav>
 
-<main>
+  <main>
 
-  <div class="hero-section">
-    <img src="src/RoundLogo.png" alt="PL" class="big-logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3502/3502601.png'">
-    <h1>User Guide</h1>
-    <p>Master Price Lister in minutes. A comprehensive manual for managing your inventory, invoices, and data.</p>
-  </div>
+    <div class="hero-section">
+      <img src="src/RoundLogo.png" alt="PL" class="big-logo"
+        onerror="this.src='https://cdn-icons-png.flaticon.com/512/3502/3502601.png'">
+      <h1>User Guide</h1>
+      <p>Master Price Lister in minutes. A comprehensive manual for managing your inventory, invoices, and data.</p>
+    </div>
 
-  <div class="nav-label">Quick Jump to Features</div>
-  <div class="feature-nav">
-    <a href="#invoice-guide" class="nav-card">
-      <i class="fas fa-file-invoice-dollar"></i>
-      <span>Invoice Maker</span>
-    </a>
-    <a href="#listing" class="nav-card">
-      <i class="fas fa-box"></i>
-      <span>Add Products</span>
-    </a>
-    <a href="#categories" class="nav-card">
-      <i class="fas fa-layer-group"></i>
-      <span>Categories</span>
-    </a>
-    <a href="#variations" class="nav-card">
-      <i class="fas fa-tags"></i>
-      <span>Variations</span>
-    </a>
-    <a href="#export" class="nav-card">
-      <i class="fas fa-file-export"></i>
-      <span>Export Data</span>
-    </a>
-    <a href="#backup" class="nav-card">
-      <i class="fas fa-hdd"></i>
-      <span>Backup</span>
-    </a>
-  </div>
+    <div class="nav-label">Quick Jump to Features</div>
+    <div class="feature-nav">
+      <a href="#invoice-guide" class="nav-card">
+        <i class="fas fa-file-invoice-dollar"></i>
+        <span>Invoice Maker</span>
+      </a>
+      <a href="#listing" class="nav-card">
+        <i class="fas fa-box"></i>
+        <span>Add Products</span>
+      </a>
+      <a href="#categories" class="nav-card">
+        <i class="fas fa-layer-group"></i>
+        <span>Categories</span>
+      </a>
+      <a href="#variations" class="nav-card">
+        <i class="fas fa-tags"></i>
+        <span>Variations</span>
+      </a>
+      <a href="#export" class="nav-card">
+        <i class="fas fa-file-export"></i>
+        <span>Export Data</span>
+      </a>
+      <a href="#backup" class="nav-card">
+        <i class="fas fa-hdd"></i>
+        <span>Backup</span>
+      </a>
+    </div>
 
-  <div class="guide-topic" id="invoice-guide">
-    <h2><i class="fas fa-file-invoice"></i> 1. How Invoicing Works</h2>
-    <p>The Invoice Maker is designed to be flexible for both quick sales and formal business transactions. There are two modes:</p>
-    
-    <h3>Customer Receipt (Simple)</h3>
-    <p>Best for walk-in customers. It generates a simple list of items, total cost, and date. No complex header information is required.</p>
-    <p>You can generate a receipt when invoice is paid. Customize the receipt in app settings there are full options to customize a customer receipt.</p>
+    <div class="guide-topic" id="invoice-guide">
+      <h2><i class="fas fa-file-invoice"></i> 1. How Invoicing Works</h2>
+      <p>The Invoice Maker is designed to be flexible for both quick sales and formal business transactions. There are
+        two modes:</p>
 
-    <h3>Business Invoice (B2B)</h3>
-    <p>Best for selling to other shops. You can add:</p>
-    <ul>
+      <h3>Customer Receipt (Simple)</h3>
+      <p>Best for walk-in customers. It generates a simple list of items, total cost, and date. No complex header
+        information is required.</p>
+      <p>You can generate a receipt when invoice is paid. Customize the receipt in app settings there are full options
+        to customize a customer receipt.</p>
+
+      <h3>Business Invoice (B2B)</h3>
+      <p>Best for selling to other shops. You can add:</p>
+      <ul>
         <li><strong>Title:</strong> Title can be Default or Your Shop name.</li>
-      <li><strong>Business Header/Name:</strong> Your Shop Name or Your name, Phone, and Address (set in drawer).</li>
-      <li><strong>Customer Info:</strong> The buyer's Name and Contact info.</li>
-      <li><strong>Invoice ID:</strong> Auto-generated unique number or custom number for tracking.</li>
-    </ul>
-    <div class="alert-box">
-      <strong>Note:</strong> For knowing the business invoice, the system auto generate this "BusInv-" in the invoice number.
-    </div>
-  </div>
-
-  <div class="guide-topic" id="listing">
-    <h2><i class="fas fa-box-open"></i> 2. Product Listing</h2>
-    <p>Adding products is the core of the app. To add a product, tap the <strong>+</strong> button on the home/product screen.</p>
-    <ul>
-      <li><strong>Name:</strong> Give a name of the item.</li>
-      <li><strong>Price:</strong> Your selling price.</li>
-      <li><strong>Cost (Optional):</strong> What you paid for it (calculated for profit reports).</li>
-      <li><strong>Category:</strong> Assign a category label to organize your products.</li>
-      <li><strong>Barcode:</strong> Scan or type the code manually. Upc code help to find products instantly</li>
-    </ul>
-        <div class="alert-box">
-      <strong>Note:</strong> Scanner can make mistake to get Upc/Barcode, *recommend you to check the code after scanning.
+        <li><strong>Business Header/Name:</strong> Your Shop Name or Your name, Phone, and Address (set in drawer).</li>
+        <li><strong>Customer Info:</strong> The buyer's Name and Contact info.</li>
+        <li><strong>Invoice ID:</strong> Auto-generated unique number or custom number for tracking.</li>
+      </ul>
+      <div class="alert-box">
+        <strong>Note:</strong> For knowing the business invoice, the system auto generate this "BusInv-" in the invoice
+        number.
+      </div>
     </div>
 
-    <h3>How to Find Products</h3>
-    <p>You can find products in two ways: 
-    <br>1. <strong>Search Bar:</strong> Type the name, code or product id.
-    <br>2. <strong>Scan Button:</strong> Tap the Scanner icon and point it at a barcode. The app will instantly jump to that product if code exist.</p>
-  </div>
+    <div class="guide-topic" id="listing">
+      <h2><i class="fas fa-box-open"></i> 2. Product Listing</h2>
+      <p>Adding products is the core of the app. To add a product, tap the <strong>+</strong> button on the home/product
+        screen.</p>
+      <ul>
+        <li><strong>Name:</strong> Give a name of the item.</li>
+        <li><strong>Price:</strong> Your selling price.</li>
+        <li><strong>Cost (Optional):</strong> What you paid for it (calculated for profit reports).</li>
+        <li><strong>Category:</strong> Assign a category label to organize your products.</li>
+        <li><strong>Barcode:</strong> Scan or type the code manually. Upc code help to find products instantly.</li>
+      </ul>
+      <div class="alert-box">
+        <strong>Note:</strong> Scanner can make mistake to get Upc/Barcode, *recommend you to check the code after
+        scanning.
+      </div>
 
-  <div class="guide-topic" id="categories">
-    <h2><i class="fas fa-folder-tree"></i> 3. Category Logic</h2>
-    <p>Categories help you filter products (e.g., Electronics, Food, Clothing). You can rename it.</p>
-    
-    <div class="alert-box">
-      <strong>⚠️ Why can't I delete a Category?</strong><br>
-        You can only delete empty categories. If a category has products assigned to it, you must first remove or reassign those products before deleting the category. Beacause the app needs to keep data integrity and avoid orphaned products without a category.
-      <pre></pre>
-      <strong>Solution:</strong> First, delete the assigned products inside the category (or move them to another category), and then you can delete the category itself.
+      <h3>How to Find Products</h3>
+      <p>You can find products in two ways:
+        <br>1. <strong>Search Bar:</strong> Type the name, code or product id.
+        <br>2. <strong>Scan Button:</strong> Tap the Scanner icon and point it at a barcode. The app will instantly jump
+        to that product if code exist.
+      </p>
     </div>
-  </div>
 
-  <div class="guide-topic">
-    <h2><i class="fas fa-chart-pie"></i> 4. Dashboard Overview</h2>
-    <p>The dashboard provides a chart of your sales report.</p>
-    <ul>
-      <li><strong>Total sale Value:</strong> Collect invoices according to date range & check invoice amount (recived + unpaided)</li>
-      <li><strong>Received</strong> Counting paid invoices sale amount</li>
-      <li><strong>Pending</strong> counting unpaided invoices sale amount</li>
-    </ul>
-  </div>
+    <div class="guide-topic" id="categories">
+      <h2><i class="fas fa-folder-tree"></i> 3. Category Logic</h2>
+      <p>Categories help you filter products (e.g., Electronics, Food, Clothing). You can rename it.</p>
 
-  <div class="guide-topic" id="variations">
-    <h2><i class="fas fa-tags"></i> 5. Product Variations</h2>
-    <p>Use variations when you have one product (e.g., "T-Shirt") that comes in different versions (e.g., "Red", "Blue", "Size XL").</p>
-    <p>Instead of creating "T-Shirt Red" and "T-Shirt Blue" as separate items, create one "T-Shirt" and add variations inside it. Each variation can have its own name and barcode.</p>
-  </div>
-
-  <div class="guide-topic" id="export">
-    <h2><i class="fas fa-file-export"></i> 6. Exporting Data</h2>
-    <p>You can take your data out of the app at any time.</p>
-    <ul>
-      <li><strong>PDF Export:</strong> Creates a printable catalog of your items.</li>
-      <li><strong>Excel Export:</strong> Creates a .CSV or .xlsx file compatible with Microsoft Excel or Google Sheets. This is useful for accounting.</li>
-    </ul>
-  </div>
-
-  <div class="guide-topic" id="backup">
-    <h2><i class="fas fa-hdd"></i> 7. Backup & Import</h2>
-    <p>Since the app is offline, if you lose your phone, you lose your data <strong>unless you backup</strong>.</p>
-    <ul>
-      <li><strong>Download Backup:</strong> Generates a `.bin` file containing your entire database. Save this to Google Drive or your PC.</li>
-      <li><strong>Import:</strong> Select a previously saved `.bin` file to restore your app data.</li>
-    </ul>
-    <div class="alert-box">
-      <strong>Warning:</strong> Don't forget to backup regularly! We cannot recover lost data if you lose your device or uninstall the app without a backup.
+      <div class="alert-box">
+        <strong>⚠️ Why can't I delete a Category?</strong><br>
+        You can only delete empty categories. If a category has products assigned to it, you can't delete it. Beacause the app needs to keep data integrity and avoid
+        orphaned products without a category.
+        <pre></pre>
+        <strong>Solution:</strong> First, delete the assigned products inside the category (or move them to another
+        category), and then you can delete the category itself.
+      </div>
     </div>
-  </div>
 
-  <div class="guide-topic">
-    <h2><i class="fas fa-cogs"></i> 8. Technical Features</h2>
-    
-    <h3>Product ID</h3>
-    <p>Every product is assigned a unique internal ID. This ensures that even if two products have the same name, the system knows they are different.</p>
+    <div class="guide-topic">
+      <h2><i class="fas fa-chart-pie"></i> 4. Dashboard Overview</h2>
+      <p>The dashboard provides a chart of your sales report.</p>
+      <ul>
+        <li><strong>Total sale Value:</strong> Collect invoices according to date range & check invoice amount (recived
+          + unpaided).</li>
+        <li><strong>Received:</strong> Counting paid invoices sale amount.</li>
+        <li><strong>Pending:</strong> counting unpaided invoices sale amount.</li>
+      </ul>
+    </div>
 
-    <h3>Duplication</h3>
-    <p>You can get copy of a existing product to make new product or different pricing. This is useful when adding similar items where only the price or size changes. "(Image are duplicated from main once)"</p>
+    <div class="guide-topic" id="variations">
+      <h2><i class="fas fa-tags"></i> 5. Product Variations</h2>
+      <p>Use variations when you have one product (e.g., "T-Shirt") that comes in different versions (e.g., "Red",
+        "Blue", "Size XL").</p>
+      <p>Instead of creating "T-Shirt Red" and "T-Shirt Blue" as separate items, create one "T-Shirt" and add variations
+        inside it. Each variation can have its own name and barcode.</p>
+    </div>
 
-    <h3>Unsaved Changes</h3>
-    <p>If you start editing a product or invoice and try to go back without saving, the app will trigger a popup warning to prevent accidental data loss. "(Working when you Enable it from Settings)"</p>
-  </div>
+    <div class="guide-topic" id="export">
+      <h2><i class="fas fa-file-export"></i> 6. Exporting Data</h2>
+      <p>You can take your data out of the app at any time.</p>
+      <ul>
+        <li><strong>PDF Export:</strong> Creates a printable catalog of your items.</li>
+        <li><strong>Excel Export:</strong> Creates a .CSV or .xlsx file compatible with Microsoft Excel or Google
+          Sheets. This is useful for accounting.</li>
+      </ul>
+    </div>
 
-</main>
+    <div class="guide-topic" id="backup">
+      <h2><i class="fas fa-hdd"></i> 7. Backup & Import</h2>
+      <p>Since the app is offline, if you lose your phone, you lose your data <strong>unless you backup</strong>.</p>
+      <ul>
+        <li><strong>Download Backup:</strong> Generates a `.bin` file containing your entire database. Save this to
+          Google Drive or your PC.</li>
+        <li><strong>Import:</strong> Select a previously saved `.bin` file to restore your app data.</li>
+      </ul>
+      <div class="alert-box">
+        <strong>Warning:</strong> Don't forget to backup regularly! We cannot recover lost data if you lose your device
+        or uninstall the app without a backup.
+      </div>
+    </div>
 
-<footer>
-  <p>© 2026 Price Lister. All rights reserved.</p>
-</footer>
+    <div class="guide-topic">
+      <h2><i class="fas fa-cogs"></i> 8. Technical Features</h2>
 
-<script>
-  // Drawer
-  const drawer = document.getElementById('drawer');
-  const overlay = document.getElementById('overlay');
-  function toggleDrawer() {
-    drawer.classList.toggle('open');
-    overlay.classList.toggle('show');
-  }
+      <h3>Product ID</h3>
+      <p>Every product is assigned a unique internal ID. This ensures that even if two products have the same name, the
+        system knows they are different.</p>
 
-  // Theme
-  const themeIcon = document.getElementById('themeIcon');
-  const body = document.body;
-  if(localStorage.getItem('theme') === 'light') {
-    body.classList.add('light');
-    themeIcon.classList.replace('fa-moon', 'fa-sun');
-  }
-  function toggleTheme() {
-    body.classList.toggle('light');
-    const isLight = body.classList.contains('light');
-    themeIcon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
-    localStorage.setItem('theme', isLight ? 'light' : 'dark');
-  }
-</script>
+      <h3>Duplication</h3>
+      <p>You can get copy of a existing product to make new product or different pricing. This is useful when adding
+        similar items where only the price or size changes. "(Image are duplicated from main once)"</p>
+
+      <h3>Unsaved Changes</h3>
+      <p>If you start editing a product or invoice and try to go back without saving, the app will trigger a popup
+        warning to prevent accidental data loss. "(Working when you Enable it from Settings)"</p>
+
+      <h3>System Loading</h3>
+      <p>When you first open the app, it will load all your products and data from the local database. This can take a few seconds, but it's important for the app to function properly.
+        Price Lister allow you to add infinite products, so it's important to have a fast loading system.
+      </p>
+    </div>
+
+  </main>
+
+  <footer>
+    <p>© 2026 Price Lister. All rights reserved.</p>
+  </footer>
+
+  <script>
+    // Drawer
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlay');
+    function toggleDrawer() {
+      drawer.classList.toggle('open');
+      overlay.classList.toggle('show');
+    }
+
+    // Theme
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+    if (localStorage.getItem('theme') === 'light') {
+      body.classList.add('light');
+      themeIcon.classList.replace('fa-moon', 'fa-sun');
+    }
+    function toggleTheme() {
+      body.classList.toggle('light');
+      const isLight = body.classList.contains('light');
+      themeIcon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+  </script>
 
 </body>
+
 </html>

@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Price Lister – Decoder</title>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Poppins:wght@500;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css" />
+  <link rel="stylesheet" href="Style.css" />
+  <meta name="description" content="Decode unique product codes to see their creation timestamp.">
+  <style>
+    /* Small page-specific tweaks for the decoder card */
+    .decoder-wrap {
+      display: grid;
+      place-items: center;
+      min-height: 60vh;
+      padding: 40px 20px;
+    }
+
+    .decoder-card {
+      width: 100%;
+      max-width: 720px;
+      padding: 28px;
+      border-radius: 20px;
+      background: var(--card-bg);
+      border: 1px solid var(--card-border);
+      box-shadow: var(--shadow);
+    }
+
+    textarea#inputCode {
+      width: 100%;
+      resize: vertical;
+      min-height: 80px;
+      padding: 16px;
+      border-radius: 12px;
+      background: transparent;
+      color: var(--text-main);
+      border: 1px solid var(--card-border);
+      font-size: 14px;
+      outline: none;
+    }
+
+    .result {
+      margin-top: 18px;
+      padding: 16px;
+      border-radius: 12px;
+      display: flex;
+      gap: 12px;
+      align-items: center;
+    }
+
+    .result.success {
+      background: linear-gradient(135deg, rgba(0, 122, 55, 0.06), rgba(0, 122, 55, 0.02));
+      color: var(--text-main);
+      border: 1px solid rgba(0, 122, 55, 0.12);
+    }
+
+    .result.error {
+      background: linear-gradient(135deg, rgba(225, 6, 0, 0.06), rgba(225, 6, 0, 0.02));
+      color: var(--text-main);
+      border: 1px solid rgba(225, 6, 0, 0.12);
+    }
+
+    .result .msg {
+      font-weight: 600;
+    }
+
+    .small-meta {
+      color: var(--text-muted);
+      font-size: 13px;
+      margin-top: 6px;
+    }
+
+    @media (max-width: 720px) {
+      .decoder-card { padding: 20px }
+    }
+  </style>
+</head>
+
+<body>
+
+  <header>
+    <div class="left-group">
+      <i class="fas fa-bars menu-icon" onclick="toggleDrawer()"></i>
+
+      <div class="brand" onclick="toggleDrawer()">
+        <img src="src/RoundLogo.png" alt="Logo" onerror="this.src='https://cdn-icons-png.flaticon.com/512/3502/3502601.png'">
+        <span class="brand-name">Price Lister</span>
+      </div>
+    </div>
+
+    <div class="theme-btn" onclick="toggleTheme()">
+      <i class="fas fa-moon" id="themeIcon"></i>
+    </div>
+  </header>
+
+  <div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
+  <nav class="drawer" id="drawer">
+    <a href="index.html" onclick="toggleDrawer()"><i class="fas fa-home"></i> Home</a>
+    <a href="guide.html" onclick="toggleDrawer()"><i class="fas fa-book"></i> Guide</a>
+    <a href="contact.html"><i class="fas fa-envelope"></i> Support</a>
+
+    <div class="drawer-footer">
+      © 2026 Price Lister
+    </div>
+  </nav>
+
+  <main>
+    <section class="container decoder-wrap">
+      <div class="decoder-card">
+        <h2>Decoder</h2>
+        <p class="small-meta">Paste the Product ID here to check its creation date.</p>
+
+        <label for="inputCode" class="small-meta" style="margin-top:12px; display:block">Enter Unique ID</label>
+        <textarea id="inputCode" placeholder="Paste code here..."></textarea>
+
+        <div style="display:flex; gap:12px; margin-top:12px">
+          <button id="decodeBtn" class="btn btn-primary">Check Code</button>
+          <button id="clearBtn" class="btn btn-outline">Clear</button>
+        </div>
+
+        <div id="resultArea" style="display:none">
+          <!-- result will be injected here -->
+        </div>
+
+        <div class="small-meta" style="margin-top:14px">Note: The decoder expects the first part of the code (everything except the last 6 chars) to be a base36 timestamp in milliseconds.</div>
+      </div>
+    </section>
+  </main>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h4>Price Lister</h4>
+          <p>Empowering small businesses with professional digital tools. Simple, fast, and secure.</p>
+        </div>
+
+        <div class="footer-links">
+          <h5>Legal</h5>
+          <a href="terms.html">Terms of Service</a>
+          <a href="privacy.html">Privacy Policy</a>
+        </div>
+
+        <div class="footer-links">
+          <h5>Social</h5>
+          <a href="#"><i class="fab fa-facebook"></i> Facebook</a>
+          <a href="#"><i class="fab fa-instagram"></i> Instagram</a>
+          <a href="#"><i class="fab fa-linkedin"></i> LinkedIn</a>
+        </div>
+      </div>
+
+      <div class="copyright">
+        © 2026 Price Lister. All rights reserved.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Reuse drawer & theme logic
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlay');
+
+    function toggleDrawer() {
+      drawer.classList.toggle('open');
+      overlay.classList.toggle('show');
+    }
+
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      body.classList.add('light');
+      themeIcon.className = 'fas fa-sun';
+    } else {
+      themeIcon.className = 'fas fa-moon';
+    }
+
+    function toggleTheme() {
+      body.classList.toggle('light');
+      const isLight = body.classList.contains('light');
+      themeIcon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+
+    // Decoder logic (mirrors Kotlin decodeUniqueId behavior)
+    function formatDateForDisplay(date) {
+      const dd = String(date.getDate()).padStart(2, '0');
+      const monthNames = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
+      const month = monthNames[date.getMonth()];
+      const year = date.getFullYear();
+
+      const hrs24 = date.getHours();
+      const hrs12 = String((hrs24 % 12) || 12).padStart(2, '0');
+      const mins = String(date.getMinutes()).padStart(2, '0');
+      const secs = String(date.getSeconds()).padStart(2, '0');
+      const ms = String(date.getMilliseconds()).padStart(3, '0');
+      const ampm = hrs24 >= 12 ? 'PM' : 'AM';
+
+      return `${dd} ${month} ${year}, ${hrs12}:${mins}:${secs}:${ms} ${ampm}`;
+    }
+
+    function decodeUniqueId(code) {
+      if (!code) return null;
+      code = String(code).toUpperCase().trim();
+      if (code.length <= 6) return null;
+      if (!/^[0-9A-Z]+$/.test(code)) return null;
+      try {
+        const timePart = code.slice(0, -6);
+        const timestamp = parseInt(timePart, 36);
+        if (isNaN(timestamp)) return null;
+        const now = Date.now();
+        if (timestamp < 0 || timestamp > now + 86400000) return null;
+        return formatDateForDisplay(new Date(timestamp));
+      } catch (e) {
+        return null;
+      }
+    }
+
+    // UI interactions
+    const inputEl = document.getElementById('inputCode');
+    const btn = document.getElementById('decodeBtn');
+    const clearBtn = document.getElementById('clearBtn');
+    const resultArea = document.getElementById('resultArea');
+
+    function showResult(message, isError = false) {
+      resultArea.style.display = 'block';
+      resultArea.innerHTML = '';
+      const div = document.createElement('div');
+      div.className = 'result ' + (isError ? 'error' : 'success');
+      div.innerHTML = `<div style="font-size:20px; width:36px; text-align:center">${isError ? '<i class="fas fa-exclamation-triangle"></i>' : '<i class="fas fa-check-circle"></i>'}</div><div><div class="msg">${message}</div></div>`;
+      resultArea.appendChild(div);
+    }
+
+    btn.addEventListener('click', () => {
+      const val = inputEl.value;
+      const result = decodeUniqueId(val);
+      if (result) showResult('Created Date: ' + result, false);
+      else showResult('Invalid Code Structure', true);
+    });
+
+    clearBtn.addEventListener('click', () => {
+      inputEl.value = '';
+      resultArea.style.display = 'none';
+    });
+
+    // Allow Ctrl+Enter or Cmd+Enter to run decoding
+    inputEl.addEventListener('keydown', (e) => {
+      if ((e.ctrlKey || e.metaKey) && e.key === 'Enter') {
+        btn.click();
+      }
+    });
+  </script>
+
+</body>
+
+</html>

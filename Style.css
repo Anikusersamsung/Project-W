@@ -1,0 +1,723 @@
+/* =========================================
+   Price Lister - Unified Design System
+   ========================================= */
+
+:root {
+    /* --- Color Palette (Dark Default - Premium) --- */
+    --bg: #050505;
+    --bg-gradient: radial-gradient(circle at 90% 10%, #1a0505, #050505);
+
+    --text-main: #ffffff;
+    --text-muted: #a0a0a0;
+
+    --card-bg: #111111;
+    --card-border: rgba(255, 255, 255, 0.08);
+    --card-hover: #161616;
+
+    --primary: #e10600;
+    --primary-gradient: linear-gradient(135deg, #e10600 0%, #ff4d4d 100%);
+    --primary-glow: rgba(225, 6, 0, 0.4);
+
+    --nav-bg: rgba(5, 5, 5, 0.85);
+    /* Glass effect color */
+    --shadow: 0 10px 40px -10px rgba(0, 0, 0, 0.6);
+
+    /* Additional variables from other pages mapped to main theme */
+    --surface: var(--card-bg);
+    --border: var(--card-border);
+}
+
+/* --- Light Theme Variables --- */
+body.light {
+    --bg: #ffffff;
+    --bg-gradient: radial-gradient(circle at 90% 10%, #fff0f0, #ffffff);
+
+    --text-main: #1a1a1a;
+    --text-muted: #555555;
+
+    --card-bg: #ffffff;
+    --card-border: rgba(0, 0, 0, 0.08);
+    --card-hover: #f8f8f8;
+
+    --nav-bg: rgba(255, 255, 255, 0.9);
+    --shadow: 0 10px 30px -10px rgba(0, 0, 0, 0.1);
+
+    --surface: #f8f9fa;
+    --border: #e0e0e0;
+}
+
+/* --- Reset & Base Styles --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    scroll-behavior: smooth;
+}
+
+body {
+    background: var(--bg);
+    background-image: var(--bg-gradient);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    line-height: 1.6;
+    transition: background 0.3s ease, color 0.3s ease;
+    overflow-x: hidden;
+}
+
+h1,
+h2,
+h3,
+h4,
+h5,
+.brand-name {
+    font-family: 'Poppins', sans-serif;
+}
+
+a {
+    text-decoration: none;
+    color: inherit;
+    transition: 0.2s;
+}
+
+a:hover {
+    color: var(--primary);
+}
+
+ul {
+    list-style: none;
+}
+
+/* --- Utilities --- */
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+}
+
+/* Animation: Fade Up */
+.reveal {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: all 0.8s cubic-bezier(0.5, 0, 0, 1);
+}
+
+.reveal.active {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+/* ================= HEADER ================= */
+header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 72px;
+    background: var(--nav-bg);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--card-border);
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 0 24px;
+    z-index: 1000;
+    transition: all 0.3s ease;
+}
+
+.left-group {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+}
+
+.menu-icon,
+.menu-btn {
+    font-size: 20px;
+    cursor: pointer;
+    color: var(--text-main);
+    transition: color 0.2s;
+}
+
+.menu-icon:hover,
+.menu-btn:hover {
+    color: var(--primary);
+}
+
+.brand {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    cursor: pointer;
+}
+
+.brand img {
+    height: 38px;
+    width: auto;
+    object-fit: contain;
+}
+
+.brand-name {
+    font-size: 20px;
+    font-weight: 700;
+    color: var(--text-main);
+    letter-spacing: -0.5px;
+}
+
+.theme-btn {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    font-size: 18px;
+    transition: background 0.3s;
+    color: var(--text-main);
+}
+
+.theme-btn:hover {
+    background: var(--card-border);
+}
+
+/* ================= DRAWER MENU ================= */
+.drawer-overlay {
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.6);
+    backdrop-filter: blur(3px);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s;
+    z-index: 1001;
+}
+
+.drawer-overlay.show {
+    opacity: 1;
+    pointer-events: auto;
+}
+
+.drawer {
+    position: fixed;
+    top: 0;
+    left: -280px;
+    width: 280px;
+    height: 100%;
+    background: var(--card-bg);
+    border-right: 1px solid var(--card-border);
+    padding-top: 80px;
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 1002;
+    box-shadow: 5px 0 30px rgba(0, 0, 0, 0.3);
+}
+
+.drawer.open {
+    transform: translateX(280px);
+}
+
+/* Drawer Link Styles - Unifying the look */
+.drawer a {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 14px 24px;
+    font-weight: 500;
+    border-bottom: 1px solid var(--card-border);
+    transition: 0.2s;
+    color: var(--text-main);
+}
+
+.drawer a:hover {
+    background: var(--card-hover);
+    color: var(--primary);
+}
+
+.drawer-footer {
+    position: absolute;
+    bottom: 24px;
+    left: 0;
+    right: 0;
+    text-align: center;
+    font-size: 12px;
+    color: var(--text-muted);
+}
+
+/* ================= MAIN CONTENT LAYOUT ================= */
+main {
+    padding-top: 80px;
+    overflow: hidden;
+    /* Default max-width for reading pages, overridden by .container on home */
+    max-width: 1200px;
+    margin: 0 auto;
+}
+
+/* Add padding for non-container pages (privacy, guide, etc) */
+body:not(.home-page) main {
+    padding-left: 20px;
+    padding-right: 20px;
+    padding-bottom: 80px;
+    max-width: 900px;
+}
+
+/* ================= HERO SECTION (Home) ================= */
+.hero {
+    min-height: 80vh;
+    display: flex;
+    align-items: center;
+    padding-top: 40px;
+    padding-bottom: 80px;
+}
+
+.hero-grid {
+    display: grid;
+    grid-template-columns: 1.1fr 0.9fr;
+    gap: 50px;
+    align-items: center;
+}
+
+/* Ambient Glow Behind Hero */
+.hero::before {
+    content: '';
+    position: absolute;
+    top: 20%;
+    left: 50%;
+    width: 400px;
+    height: 400px;
+    background: var(--primary);
+    filter: blur(180px);
+    opacity: 0.12;
+    z-index: -1;
+    pointer-events: none;
+}
+
+.hero-text h1 {
+    font-size: clamp(38px, 5vw, 60px);
+    line-height: 1.1;
+    margin-bottom: 24px;
+    font-weight: 800;
+}
+
+.text-gradient {
+    background: var(--primary-gradient);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    display: inline-block;
+}
+
+.hero-text p {
+    font-size: 18px;
+    color: var(--text-muted);
+    margin-bottom: 36px;
+    max-width: 520px;
+}
+
+.btn-group {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+}
+
+.btn {
+    padding: 14px 30px;
+    border-radius: 50px;
+    font-weight: 600;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.btn-primary {
+    background: var(--primary-gradient);
+    color: white;
+    box-shadow: 0 4px 20px var(--primary-glow);
+}
+
+.btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px var(--primary-glow);
+}
+
+.btn-outline {
+    background: transparent;
+    color: var(--text-main);
+    border: 1px solid var(--card-border);
+}
+
+.btn-outline:hover {
+    border-color: var(--primary);
+    color: var(--primary);
+}
+
+.hero-image {
+    position: relative;
+    animation: float 6s ease-in-out infinite;
+}
+
+.hero-image img {
+    width: 100%;
+    max-width: 360px;
+    display: block;
+    margin: 0 auto;
+    filter: drop-shadow(0 20px 40px rgba(0, 0, 0, 0.5));
+}
+
+@keyframes float {
+
+    0%,
+    100% {
+        transform: translateY(0);
+    }
+
+    50% {
+        transform: translateY(-15px);
+    }
+}
+
+/* ================= FEATURES SECTION ================= */
+section {
+    margin-bottom: 120px;
+}
+
+.section-head {
+    text-align: center;
+    margin-bottom: 60px;
+    max-width: 700px;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+.section-head h2 {
+    font-size: 36px;
+    margin-bottom: 16px;
+}
+
+.section-head p {
+    color: var(--text-muted);
+    font-size: 16px;
+}
+
+.features-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+    gap: 24px;
+}
+
+.card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    padding: 32px;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+}
+
+.card:hover {
+    transform: translateY(-6px);
+    border-color: var(--primary);
+    box-shadow: var(--shadow);
+    background: var(--card-hover);
+}
+
+.card-icon {
+    width: 56px;
+    height: 56px;
+    background: rgba(225, 6, 0, 0.08);
+    color: var(--primary);
+    border-radius: 16px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    margin-bottom: 24px;
+}
+
+.card h3 {
+    font-size: 20px;
+    margin-bottom: 12px;
+    font-weight: 600;
+}
+
+.card p {
+    font-size: 15px;
+    color: var(--text-muted);
+    line-height: 1.7;
+}
+
+/* Highlight Card */
+.card.highlight {
+    background: linear-gradient(145deg, var(--card-bg), rgba(225, 6, 0, 0.05));
+    border: 1px solid rgba(225, 6, 0, 0.2);
+}
+
+/* ================= GUIDE PAGE STYLES ================= */
+.hero-section {
+    text-align: center;
+    margin-bottom: 60px;
+    position: relative;
+    padding-top: 20px;
+}
+
+.big-logo {
+    width: 100px;
+    height: 100px;
+    object-fit: contain;
+    margin-bottom: 20px;
+    filter: drop-shadow(0 0 30px rgba(225, 6, 0, 0.3));
+    animation: float 6s ease-in-out infinite;
+}
+
+.hero-section h1 {
+    font-size: 42px;
+    margin-bottom: 16px;
+    /* Use gradient text consistent with main theme */
+    background: linear-gradient(135deg, #fff 0%, #aaa 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+body.light .hero-section h1 {
+    background: linear-gradient(135deg, #000 0%, #555 100%);
+    background-clip: text;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+}
+
+.hero-section p {
+    font-size: 18px;
+    color: var(--text-muted);
+    max-width: 600px;
+    margin: auto;
+}
+
+/* Feature Nav (Guide) */
+.nav-label {
+    font-size: 14px;
+    text-transform: uppercase;
+    color: var(--primary);
+    letter-spacing: 1px;
+    margin-bottom: 15px;
+    font-weight: 600;
+}
+
+.feature-nav {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 16px;
+    margin-bottom: 80px;
+}
+
+.nav-card {
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    padding: 20px;
+    border-radius: 16px;
+    text-decoration: none;
+    color: var(--text-main);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    transition: 0.3s;
+    backdrop-filter: blur(10px);
+}
+
+.nav-card:hover {
+    background: var(--card-hover);
+    border-color: var(--primary);
+    transform: translateY(-5px);
+    box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.nav-card i {
+    font-size: 24px;
+    color: var(--primary);
+    margin-bottom: 10px;
+}
+
+.nav-card span {
+    font-weight: 600;
+    font-size: 14px;
+}
+
+/* Guide Topics */
+.guide-topic {
+    margin-bottom: 60px;
+    padding-top: 20px;
+    border-top: 1px solid var(--card-border);
+}
+
+.guide-topic h2 {
+    font-size: 28px;
+    margin-bottom: 20px;
+    color: var(--primary);
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.guide-topic h3 {
+    font-size: 18px;
+    margin: 24px 0 10px;
+    color: var(--text-main);
+}
+
+.guide-topic p {
+    color: var(--text-muted);
+    margin-bottom: 16px;
+}
+
+.guide-topic ul {
+    margin-left: 20px;
+    margin-bottom: 20px;
+    color: var(--text-muted);
+}
+
+.guide-topic li {
+    margin-bottom: 8px;
+}
+
+.alert-box {
+    background: rgba(225, 6, 0, 0.1);
+    border-left: 4px solid var(--primary);
+    padding: 16px;
+    border-radius: 0 8px 8px 0;
+    margin: 20px 0;
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+.alert-box strong {
+    color: var(--primary);
+}
+
+/* ================= LEGAL PAGES (Privacy/Terms) ================= */
+.policy-header {
+    margin-bottom: 40px;
+    padding-bottom: 20px;
+    border-bottom: 1px solid var(--card-border);
+}
+
+.policy-header h1 {
+    font-size: 32px;
+    margin-bottom: 10px;
+    color: var(--primary);
+}
+
+.last-updated {
+    color: var(--text-muted);
+    font-size: 14px;
+}
+
+/* ================= FOOTER ================= */
+footer {
+    background: var(--card-bg);
+    border-top: 1px solid var(--card-border);
+    padding: 60px 0 20px;
+}
+
+/* Home page footer specific structure */
+.footer-content {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 40px;
+    margin-bottom: 40px;
+}
+
+.footer-brand h4 {
+    font-size: 22px;
+    margin-bottom: 12px;
+}
+
+.footer-brand p {
+    color: var(--text-muted);
+    font-size: 14px;
+    max-width: 320px;
+}
+
+.footer-links h5 {
+    color: var(--text-main);
+    margin-bottom: 16px;
+    font-weight: 600;
+}
+
+.footer-links a {
+    display: block;
+    color: var(--text-muted);
+    margin-bottom: 10px;
+    font-size: 14px;
+    transition: color 0.2s;
+}
+
+.footer-links a:hover {
+    color: var(--primary);
+}
+
+.copyright {
+    text-align: center;
+    border-top: 1px solid var(--card-border);
+    padding-top: 24px;
+    color: var(--text-muted);
+    font-size: 13px;
+}
+
+/* Simple Footer (Legal/Guide pages may use this) */
+footer.simple-footer {
+    padding: 30px 20px;
+    text-align: center;
+}
+
+footer.simple-footer .footer-links {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+
+footer.simple-footer .footer-links a {
+    display: inline-block;
+    margin: 0 10px;
+}
+
+/* ================= RESPONSIVE ================= */
+@media (max-width: 900px) {
+    .hero-grid {
+        grid-template-columns: 1fr;
+        text-align: center;
+        gap: 40px;
+    }
+
+    .hero-text {
+        margin: 0 auto;
+    }
+
+    .hero-text p {
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .btn-group {
+        justify-content: center;
+    }
+
+    .hero-image {
+        order: -1;
+    }
+
+    .drawer {
+        left: -280px;
+    }
+
+    /* Reset */
+}
