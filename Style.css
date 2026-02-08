@@ -691,6 +691,37 @@ footer.simple-footer .footer-links a {
 }
 
 /* ================= RESPONSIVE ================= */
+
+/* Mobile Optimization - Topbar (Extra Small Screens) */
+@media (max-width: 480px) {
+    header {
+        padding: 0 16px;
+        height: 64px;
+    }
+
+    .brand-name {
+        font-size: 16px;
+    }
+
+    .brand img {
+        height: 32px;
+    }
+
+    .menu-btn,
+    .theme-btn {
+        font-size: 18px;
+    }
+
+    .left-group {
+        gap: 12px;
+    }
+
+    main {
+        padding-top: 72px;
+    }
+}
+
+/* Tablet & Desktop Breakpoint */
 @media (max-width: 900px) {
     .hero-grid {
         grid-template-columns: 1fr;
