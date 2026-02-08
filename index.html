@@ -22,7 +22,7 @@
 <body>
 
   <header>
-    <div class="left-group">
+    <div class="left-group" style="display:flex; align-items:center; gap:16px;">
       <i class="fas fa-bars menu-btn" onclick="toggleDrawer()"></i>
       <a href="index.html" class="brand">
         <img src="src/RoundLogo.png" alt="Logo"
@@ -30,10 +30,7 @@
         <span class="brand-name">Price Lister</span>
       </a>
     </div>
-
-    <div class="theme-btn" onclick="toggleTheme()">
-      <i class="fas fa-moon" id="themeIcon"></i>
-    </div>
+    <i class="fas fa-moon theme-btn" id="themeIcon" onclick="toggleTheme()"></i>
   </header>
 
   <div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
@@ -225,4 +222,3 @@
 </body>
 
 </html>
-
