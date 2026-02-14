@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Calculator</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="calc-style.css">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+</head>
+<body>
+
+  <header>
+    <div class="left-group" style="display:flex; align-items:center; gap:16px;">
+      <i class="fas fa-bars menu-btn" onclick="toggleDrawer()"></i>
+      <a href="index.html" class="brand">
+        <img src="src/RoundLogo.png" alt="Logo"
+          onerror="this.src='https://cdn-icons-png.flaticon.com/512/3502/3502601.png'">
+        <span class="brand-name">Price Lister</span>
+      </a>
+    </div>
+    <i class="fas fa-moon theme-btn" id="themeIcon" onclick="toggleTheme()"></i>
+  </header>
+
+  <div class="drawer-overlay" id="overlay" onclick="toggleDrawer()"></div>
+  <nav class="drawer" id="drawer">
+    <a href="index.html" onclick="toggleDrawer()"><i class="fas fa-home"></i> Home</a>
+    <a href="index.html#features" onclick="toggleDrawer()"><i class="fas fa-layer-group"></i> Features</a>
+    <a href="decoder.html" onclick="toggleDrawer()"><i class="fas fa-key"></i> Decoder</a>
+    <a href="calculator.html" onclick="toggleDrawer()" style="color:var(--primary); background:rgba(255,255,255,0.05);"><i class="fas fa-calculator"></i> Calculator</a>
+    <a href="guide.html" onclick="toggleDrawer()"><i class="fas fa-book"></i> Guide</a>
+
+    <div class="drawer-footer">
+      © 2026 Price Lister
+    </div>
+  </nav>
+
+  <main>
+    <div class="calc-wrapper">
+        <div class="calc-container">
+            
+            <div class="calc-screen">
+                <div class="expression-box" id="exprBox"></div>
+                <div class="result-line" id="resultDisplay">0</div>
+            </div>
+
+            <div class="calc-body">
+                <div class="scientific-pad">
+                    <button class="btn-calc" onclick="insert('(')">(</button>
+                    <button class="btn-calc" onclick="insert(')')">)</button>
+                    <button class="btn-calc" onclick="insert('^')">^</button>
+                    <button class="btn-calc" onclick="insert('sin(')">sin</button>
+                    <button class="btn-calc" onclick="insert('cos(')">cos</button>
+                    <button class="btn-calc" onclick="insert('tan(')">tan</button>
+                    <button class="btn-calc" onclick="insert('log(')">log</button>
+                    <button class="btn-calc" onclick="insert('ln(')">ln</button>
+                    <button class="btn-calc" onclick="insert('√(')">√</button>
+                    <button class="btn-calc" onclick="insert('π')">π</button>
+                    <button class="btn-calc" onclick="insert('e')">e</button>
+                    <button class="btn-calc" onclick="insert('!')">!</button>
+                </div>
+
+                <div class="numpad">
+                    <button class="btn-calc danger" onclick="fullClear()">AC</button>
+                    <button class="btn-calc danger" 
+                            onmousedown="startBackspace()" onmouseup="stopBackspace()" 
+                            onmouseleave="stopBackspace()" ontouchstart="startBackspace()" 
+                            ontouchend="stopBackspace()">
+                        <i class="fas fa-backspace"></i>
+                    </button>
+                    <button class="btn-calc accent" onclick="insert('%')">%</button>
+                    <button class="btn-calc accent" onclick="inputOp('/')">÷</button>
+
+                    <button class="btn-calc" onclick="insert('7')">7</button>
+                    <button class="btn-calc" onclick="insert('8')">8</button>
+                    <button class="btn-calc" onclick="insert('9')">9</button>
+                    <button class="btn-calc accent" onclick="inputOp('*')">×</button>
+
+                    <button class="btn-calc" onclick="insert('4')">4</button>
+                    <button class="btn-calc" onclick="insert('5')">5</button>
+                    <button class="btn-calc" onclick="insert('6')">6</button>
+                    <button class="btn-calc accent" onclick="inputOp('-')">-</button>
+
+                    <button class="btn-calc" onclick="insert('1')">1</button>
+                    <button class="btn-calc" onclick="insert('2')">2</button>
+                    <button class="btn-calc" onclick="insert('3')">3</button>
+                    <button class="btn-calc accent" onclick="inputOp('+')">+</button>
+
+                    <button class="btn-calc" onclick="insert('0')">0</button>
+                    <button class="btn-calc" onclick="insert('00')">00</button>
+                    <button class="btn-calc" onclick="insert('000')">000</button>
+                    <button class="btn-calc primary" style="grid-row: span 2;" onclick="calculate()">=</button>
+                    <button class="btn-calc" style="grid-column: 4; grid-row: 5;" onclick="insert('.')">.</button>
+                </div>
+            </div>
+
+            <div class="history-panel">
+                <div class="history-header"><span>History</span></div>
+                <div class="history-list" id="historyList"></div>
+            </div>
+        </div>
+    </div>
+  </main>
+
+  <script>
+    let expression = "";
+    let cursorPos = 0;
+    let history = [];
+
+    const exprBox = document.getElementById('exprBox');
+    const resDisplay = document.getElementById('resultDisplay');
+
+    // --- RENDER LOGIC ---
+    function render() {
+        const left = expression.slice(0, cursorPos);
+        const right = expression.slice(cursorPos);
+        
+        // Display operators nicely
+        const safeLeft = left.replace(/\*/g, '×').replace(/\//g, '÷');
+        const safeRight = right.replace(/\*/g, '×').replace(/\//g, '÷');
+
+        // We use textNodes to ensure we can track clicks properly
+        exprBox.innerHTML = `${safeLeft}<span class="cursor"></span>${safeRight}`;
+        
+        // Keep cursor in view
+        setTimeout(() => {
+            const cursor = document.querySelector('.cursor');
+            if(cursor) cursor.scrollIntoView({ block: "nearest", inline: "nearest" });
+        }, 0);
+    }
+
+    // --- MOUSE / TAP SELECTION LOGIC ---
+    exprBox.addEventListener('click', (e) => {
+        // This gets the clicked position within the specific text node
+        let range;
+        if (document.caretRangeFromPoint) {
+            range = document.caretRangeFromPoint(e.clientX, e.clientY);
+        } else if (document.caretPositionFromPoint) {
+            // Firefox fallback
+            const pos = document.caretPositionFromPoint(e.clientX, e.clientY);
+            range = document.createRange();
+            range.setStart(pos.offsetNode, pos.offset);
+        }
+
+        if (range && range.startContainer) {
+            const node = range.startContainer;
+            const offset = range.startOffset;
+
+            // DOM Structure: [TextNode Left] [Span Cursor] [TextNode Right]
+            // We need to map the DOM click back to 'expression' string index
+            
+            // Case 1: Clicked on "Left" text
+            if (node === exprBox.firstChild && node.nodeType === Node.TEXT_NODE) {
+                cursorPos = offset;
+            } 
+            // Case 2: Clicked on "Right" text
+            else if (node === exprBox.lastChild && node.nodeType === Node.TEXT_NODE) {
+                // If there's left text, we add its length to the offset
+                const leftText = exprBox.firstChild.textContent; 
+                cursorPos = leftText.length + offset;
+            }
+            // Case 3: Clicked on empty space (container)
+            else if (node === exprBox) {
+                // If empty or clicked at very end, go to max
+                cursorPos = expression.length;
+            }
+            
+            render();
+            
+            // Reset blink animation
+            const cursor = document.querySelector('.cursor');
+            if(cursor) {
+                cursor.style.animation = 'none';
+                cursor.offsetHeight; /* trigger reflow */
+                cursor.style.animation = 'blink 1s step-end infinite';
+            }
+        }
+    });
+
+    // --- INPUT LOGIC ---
+    function insert(str) {
+        if (str === '00' || str === '000') {
+            for(let i=0; i<str.length; i++) insert('0');
+            return;
+        }
+        expression = expression.slice(0, cursorPos) + str + expression.slice(cursorPos);
+        cursorPos += str.length;
+        render();
+    }
+
+    function inputOp(op) {
+        if (expression === "" && op === "-") { insert("-"); return; }
+        if (expression === "") return;
+        const last = expression[cursorPos - 1];
+        if (['+','-','*','/'].includes(last)) {
+            if (op === '-' && ['*','/'].includes(last)) { insert("-"); return; }
+            expression = expression.slice(0, cursorPos - 1) + op + expression.slice(cursorPos);
+        } else { insert(op); }
+        render();
+    }
+
+    // --- CLEAR LOGIC ---
+    function clearExpr() { expression = ""; cursorPos = 0; render(); }
+    function fullClear() { expression = ""; cursorPos = 0; resDisplay.textContent = "0"; render(); }
+
+    // --- BACKSPACE ---
+    let bsTimer, bsDelay;
+    function backspace() {
+        if (cursorPos > 0) {
+            expression = expression.slice(0, cursorPos - 1) + expression.slice(cursorPos);
+            cursorPos--;
+            render();
+        }
+    }
+    function startBackspace() {
+        backspace();
+        bsDelay = setTimeout(() => { bsTimer = setInterval(backspace, 50); }, 500);
+    }
+    function stopBackspace() { clearTimeout(bsDelay); clearInterval(bsTimer); }
+
+    // --- CALCULATE ---
+    function calculate() {
+        if (expression === "") return;
+        
+        // Auto-close brackets
+        let open = (expression.match(/\(/g)||[]).length;
+        let close = (expression.match(/\)/g)||[]).length;
+        let mathStr = expression + ")".repeat(Math.max(0, open - close));
+
+        mathStr = mathStr.replace(/[+\-*/(]+$/, '');
+
+        try {
+            // Percent
+            mathStr = mathStr.replace(/([\d.]+)([\+\-])([\d.]+)%/g, (m,b,op,p) => `${b}${op}(${b}*${p}/100)`);
+            mathStr = mathStr.replace(/([\d.]+)%/g, (m,n) => `(${n}/100)`);
+
+            // Sci (Degrees)
+            mathStr = mathStr
+                .replace(/sin\(/g, 'Math.sin(Math.PI/180*')
+                .replace(/cos\(/g, 'Math.cos(Math.PI/180*')
+                .replace(/tan\(/g, 'Math.tan(Math.PI/180*')
+                .replace(/log\(/g, 'Math.log10(')
+                .replace(/ln\(/g, 'Math.log(')
+                .replace(/√\(/g, 'Math.sqrt(')
+                .replace(/π/g, 'Math.PI')
+                .replace(/e/g, 'Math.E')
+                .replace(/\^/g, '**');
+
+            let result = eval(mathStr);
+            if (!isFinite(result)) resDisplay.textContent = "Limit Exceeded";
+            else {
+                if (Math.abs(result) < 1e-10) result = 0;
+                result = parseFloat(result.toFixed(10));
+                resDisplay.textContent = result.toLocaleString('en-US', {maximumFractionDigits: 10});
+                setTimeout(() => { resDisplay.scrollLeft = resDisplay.scrollWidth; }, 10);
+            }
+        } catch (e) { resDisplay.textContent = "Error"; }
+    }
+
+    // --- EVENTS ---
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'F4') { e.preventDefault(); clearExpr(); }
+        if (e.key === 'F5') { e.preventDefault(); fullClear(); }
+        
+        // UP Arrow -> Go to Start
+        if (e.key === 'ArrowUp') { e.preventDefault(); cursorPos = 0; render(); }
+        // DOWN Arrow -> Go to End
+        if (e.key === 'ArrowDown') { e.preventDefault(); cursorPos = expression.length; render(); }
+        
+        if (e.key === 'ArrowLeft' && cursorPos > 0) { cursorPos--; render(); }
+        if (e.key === 'ArrowRight' && cursorPos < expression.length) { cursorPos++; render(); }
+        if (e.key === 'Enter' || e.key === '=') { e.preventDefault(); calculate(); }
+        if (e.key === 'Backspace') backspace();
+        if (/[0-9]/.test(e.key)) insert(e.key);
+        if (['+','-','*','/','%','.'].includes(e.key)) inputOp(e.key);
+    });
+
+    render();
+  </script>
+
+  <footer>
+    <div class="container">
+      <div class="footer-content">
+        <div class="footer-brand">
+          <h4>Price Lister</h4>
+          <p>The ultimate offline business app for invoicing, inventory, and price management.</p>
+        </div>
+      </div>
+      <div class="copyright">
+        © 2026 Price Lister. All rights reserved. Dhaka, Bangladesh.
+      </div>
+    </div>
+  </footer>
+
+  <script>
+    // Drawer Toggle Logic
+    const drawer = document.getElementById('drawer');
+    const overlay = document.getElementById('overlay');
+
+    function toggleDrawer() {
+      drawer.classList.toggle('open');
+      overlay.classList.toggle('show');
+    }
+
+    // Theme Logic with LocalStorage
+    const themeIcon = document.getElementById('themeIcon');
+    const body = document.body;
+
+    // 1. Check saved theme on load
+    const savedTheme = localStorage.getItem('theme');
+    if (savedTheme === 'light') {
+      body.classList.add('light');
+      themeIcon.className = 'fas fa-sun';
+    } else {
+      themeIcon.className = 'fas fa-moon';
+    }
+
+    // 2. Toggle function
+    function toggleTheme() {
+      body.classList.toggle('light');
+      const isLight = body.classList.contains('light');
+
+      // Update Icon
+      themeIcon.className = isLight ? 'fas fa-sun' : 'fas fa-moon';
+
+      // Save to Storage
+      localStorage.setItem('theme', isLight ? 'light' : 'dark');
+    }
+  </script>
+</body>
+</html>
