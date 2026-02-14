@@ -115,6 +115,7 @@ header {
     top: 0;
     left: 0;
     right: 0;
+    width: 100%;
     height: 72px;
     background: var(--nav-bg);
     backdrop-filter: blur(12px);
@@ -126,12 +127,16 @@ header {
     padding: 0 24px;
     z-index: 1000;
     transition: all 0.3s ease;
+    overflow: hidden;
+    box-sizing: border-box;
 }
 
 .left-group {
     display: flex;
     align-items: center;
     gap: 18px;
+    flex-shrink: 1;
+    min-width: 0;
 }
 
 .menu-icon,
@@ -152,6 +157,11 @@ header {
     align-items: center;
     gap: 10px;
     cursor: pointer;
+    flex-shrink: 1;
+    min-width: 0;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 
 .brand img {
@@ -165,6 +175,10 @@ header {
     font-weight: 700;
     color: var(--text-main);
     letter-spacing: -0.5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    flex-shrink: 1;
 }
 
 .theme-btn {
@@ -178,6 +192,7 @@ header {
     font-size: 18px;
     transition: background 0.3s;
     color: var(--text-main);
+    flex-shrink: 0;
 }
 
 .theme-btn:hover {
@@ -695,25 +710,41 @@ footer.simple-footer .footer-links a {
 /* Mobile Optimization - Topbar (Extra Small Screens) */
 @media (max-width: 480px) {
     header {
-        padding: 0 16px;
+        padding: 0 12px;
         height: 64px;
+        width: 100%;
+        box-sizing: border-box;
+        overflow: hidden;
     }
 
     .brand-name {
-        font-size: 16px;
+        font-size: 15px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 120px;
     }
 
     .brand img {
         height: 32px;
+        flex-shrink: 0;
     }
 
     .menu-btn,
     .theme-btn {
         font-size: 18px;
+        flex-shrink: 0;
     }
 
     .left-group {
-        gap: 12px;
+        gap: 10px;
+        flex-shrink: 1;
+        min-width: 0;
+    }
+
+    .brand {
+        flex-shrink: 1;
+        min-width: 0;
     }
 
     main {
@@ -749,6 +780,186 @@ footer.simple-footer .footer-links a {
     .drawer {
         left: -280px;
     }
+    
+}
+/* =========================================
+   CALCULATOR LAYOUT
+   ========================================= */
 
-    /* Reset */
+.calc-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: calc(100vh - 80px);
+    padding: 20px;
+    box-sizing: border-box;
+}
+
+.calc-container {
+    display: grid;
+    grid-template-columns: 1fr 320px; /* Main | History */
+    /* FIXED RATIO: Screen is always 35%, Buttons 65% */
+    grid-template-rows: 35% 65%; 
+    width: 100%;
+    max-width: 1200px;
+    height: 80vh;
+    min-height: 600px;
+    background: var(--card-bg);
+    border: 1px solid var(--card-border);
+    border-radius: 24px;
+    box-shadow: var(--shadow);
+    overflow: hidden; /* Prevents layout expansion */
+    position: relative;
+}
+
+/* --- Screen Section --- */
+.calc-screen {
+    grid-column: 1 / 2;
+    grid-row: 1 / 2;
+    padding: 20px 40px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Push text to bottom */
+    align-items: flex-end;
+    background: linear-gradient(180deg, rgba(255,255,255,0.02) 0%, rgba(0,0,0,0) 100%);
+    border-bottom: 1px solid var(--card-border);
+    
+    /* STRICT SIZE CONTROL */
+    height: 100%; 
+    overflow: hidden; 
+}
+
+/* Expression (Input) - Vertical Scroll */
+.expression-box {
+    width: 100%;
+    font-family: 'Inter', monospace;
+    font-size: 28px;
+    color: var(--text-muted);
+    text-align: right;
+    white-space: pre-wrap; /* Allows wrapping */
+    word-break: break-all;
+    
+    /* Fixed height for input area */
+    max-height: 40%; 
+    overflow-y: auto;
+    overflow-x: hidden;
+    
+    cursor: text;
+    margin-bottom: 10px;
+    padding-right: 5px;
+}
+
+.expression-box::-webkit-scrollbar { width: 4px; }
+.expression-box::-webkit-scrollbar-thumb { background: var(--card-border); border-radius: 4px; }
+
+/* Blinking Cursor */
+.cursor {
+    display: inline-block;
+    width: 2px;
+    height: 1.2em;
+    background-color: var(--primary);
+    vertical-align: text-bottom;
+    margin: 0 1px;
+    animation: blink 1s step-end infinite;
+}
+@keyframes blink { 0%, 100% { opacity: 1; } 50% { opacity: 0; } }
+
+/* Result Text - Horizontal Scroll Only */
+.result-line {
+    font-family: 'Poppins', sans-serif;
+    font-size: 54px; 
+    font-weight: 700;
+    color: var(--text-main);
+    line-height: 1.2;
+    text-align: right;
+    
+    /* FIXED LAYOUT LOGIC */
+    width: 100%;
+    height: 70px; /* Fixed height to prevent shifting */
+    white-space: nowrap; /* Forces single line */
+    overflow-x: auto; /* Scroll horizontally */
+    overflow-y: hidden;
+    display: block; /* Important for scroll */
+}
+
+/* Scrollbar for result */
+.result-line::-webkit-scrollbar { height: 4px; }
+.result-line::-webkit-scrollbar-thumb { background: var(--primary); border-radius: 4px; }
+
+/* --- Buttons Body --- */
+.calc-body {
+    grid-column: 1 / 2;
+    grid-row: 2 / 3;
+    padding: 20px;
+    display: grid;
+    grid-template-columns: 1.2fr 2fr;
+    gap: 16px;
+    background: var(--card-bg);
+    height: 100%; /* Fill remaining space */
+    overflow: hidden;
+}
+
+.scientific-pad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    align-content: center;
+}
+
+.numpad {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 10px;
+    height: 100%;
+}
+
+.btn-calc {
+    border: none;
+    outline: none;
+    background: rgba(255,255,255,0.03);
+    color: var(--text-main);
+    font-family: 'Inter', sans-serif;
+    font-size: 18px;
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.1s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    user-select: none; 
+    height: 100%;
+    width: 100%;
+    -webkit-tap-highlight-color: transparent;
+}
+
+.btn-calc:active { transform: scale(0.96); background: rgba(255,255,255,0.08); }
+.btn-calc.accent { color: var(--primary); font-weight: 700; font-size: 22px; background: rgba(225, 6, 0, 0.08); }
+.btn-calc.primary { background: var(--primary-gradient); color: white; box-shadow: 0 4px 15px var(--primary-glow); }
+.btn-calc.danger { color: #ff4d4d; }
+
+/* History Panel */
+.history-panel {
+    grid-column: 2 / 3;
+    grid-row: 1 / 3;
+    border-left: 1px solid var(--card-border);
+    background: rgba(0,0,0,0.2);
+    display: flex;
+    flex-direction: column;
+}
+.history-header { padding: 20px; border-bottom: 1px solid var(--card-border); display: flex; justify-content: space-between; color: var(--text-muted); font-weight: 600; }
+.clear-btn { background: none; border: none; color: var(--primary); cursor: pointer; }
+.history-list { flex: 1; overflow-y: auto; padding: 20px; }
+.history-item { margin-bottom: 15px; text-align: right; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; cursor: pointer; }
+.hist-expr { font-size: 13px; color: var(--text-muted); }
+.hist-res { font-size: 18px; color: var(--primary); font-weight: 600; }
+
+/* Responsive */
+@media (max-width: 900px) {
+    .calc-container { display: flex; flex-direction: column; height: auto; max-height: none; }
+    .calc-screen { height: auto; min-height: 250px; padding: 20px; }
+    .result-line { font-size: 42px; }
+    .calc-body { display: flex; flex-direction: column-reverse; gap: 20px; padding: 15px; }
+    .scientific-pad { grid-template-columns: repeat(6, 1fr); padding-bottom: 20px;}
+    .numpad { height: 400px; }
+    .history-panel { border-left: none; border-top: 1px solid var(--card-border); max-height: 250px; }
 }
